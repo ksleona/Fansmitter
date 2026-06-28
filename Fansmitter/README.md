@@ -121,16 +121,7 @@ python fansmitter_decode.py recordings\recording1.wav
 | `F1_HZ` | `140` | Frequency for bit 1 |
 | `BANDWIDTH` | `30` | Bandpass filter bandwidth (±Hz) |
 
-### 4. Generate Synthetic Test
 
-```
-python generate_synthetic.py
-python fansmitter_decode.py recordings\synthetic_test.wav
-```
-
-Generates a clean synthetic WAV with ideal tones to verify the decoder pipeline works correctly.
-
-## Limitations
 
 | Limitation | Impact |
 |------------|--------|
